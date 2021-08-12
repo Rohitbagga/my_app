@@ -22,12 +22,13 @@
         <div class="card">
             <div class="card-body">
                 <h1>Create New Wishlist</h1>
-                <form action="insert" method="post" action="/action_page.php">
+                <form action="{{route('wishlist.store')}}" method="post" action="/action_page.php">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="exampleInputEmail1">Create Wishlist</label>
                         <input type="text" name="wishlist" class="form-control" id="exampleInputEmail1"
                             aria-describedby="emailHelp" placeholder="Create Wishlist">
+
                         @if ($errors->any())
 
 

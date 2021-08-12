@@ -16,13 +16,13 @@
         <div class="card">
             <div class="card-body">
                 <h1>Edit Wishlist</h1>
-
-                <form action="{{ route('wishlists.store }}" method="post" action="/action_page.php">
+             
+                <form action="{{route('wishlist.update',$data->id)}}" method="GET"  action="/action_page.php">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="exampleInputEmail1">Create Wishlist</label>
-                        <input type="hidden" name="listid" value="{{ $data['id'] }}">
-                        <input type="text" name="wishlist" class="form-control" value="{{ $data['wishlist_name'] }}"
+                        <input type="hidden" name="listid" value="{{ $data->id }}">
+                        <input type="text" name="wishlist" class="form-control" value="{{ $data->wishlist_name }}"
                             id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Create Wishlist">
 
                     </div>

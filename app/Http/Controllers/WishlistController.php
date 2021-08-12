@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
@@ -14,7 +16,12 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        return view('user-wishlist');
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $wishlist = User::find(1)->wishlist;
+            return view('wishlist-table')->with('list', $wishlist);} else {
+            return redirect('/login');
+        }
     }
 
     /**
@@ -24,7 +31,11 @@ class WishlistController extends Controller
      */
     public function create()
     {
+        if (Auth::check()) {
 
+            return view('user-wishlist');} else {
+            return redirect('/login');
+        }
     }
 
     /**
@@ -35,14 +46,22 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'wishlist' => 'required',
-        ]);
-        $list = new Wishlist;
-        $list->wishlist_name = $request->input('wishlist');
-        $list->save();
 
-        return redirect('/wishlist-table/success')->with('success', 'Data Save');
+        if (Auth::check()) {
+
+            $this->validate($request, [
+                'wishlist' => 'required',
+            ]);
+            $userId = Auth::id();
+            $list = new Wishlist;
+            $list->wishlist_name = $request->input('wishlist');
+            $list->user_id = $userId;
+            $list->save();
+
+            return redirect()->route('wishlist.index');
+        } else {
+            return redirect('/login');
+        }
     }
     /**
      * Display the specified resource.
@@ -52,8 +71,7 @@ class WishlistController extends Controller
      */
     public function show()
     {
-        $wishlist = Wishlist::all();
-        return view('wishlist-table')->with('list', $wishlist);
+
     }
 
     /**
@@ -64,8 +82,14 @@ class WishlistController extends Controller
      */
     public function edit($id)
     {
-        $data = Wishlist::find($id);
-        return view('edit-wishlist', ['data' => $data]);
+
+        if (Auth::check()) {
+
+            $data = Wishlist::find($id);
+            return view('edit-wishlist', ['data' => $data]);
+        } else {
+            return redirect('/login');
+        }
     }
 
     /**
@@ -77,10 +101,18 @@ class WishlistController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = Wishlist::find($id);
-        $data->wishlist_name = $request->wishlist;
-        $data->save();
-        return redirect('/wishlist-table/list-updated');
+        $this->validate($request, [
+            'wishlist' => 'required',
+        ]);
+        if (Auth::check()) {
+
+            $data = Wishlist::find($id);
+            $data->wishlist_name = $request->wishlist;
+            $data->save();
+            return redirect('/wishlist-table/list-updated');
+        } else {
+            return redirect('/login');
+        }
     }
 
     /**
@@ -91,10 +123,13 @@ class WishlistController extends Controller
      */
     public function destroy($id)
     {
+        if (Auth::check()) {
+            $data = Wishlist::find($id);
 
-        $data = Wishlist::find($id);
-
-        $data->delete();
+            $data->delete();
+        } else {
+            return redirect('/login');
+        }
         // return redirect('/wishlist-table/list-deleted');
     }
 }

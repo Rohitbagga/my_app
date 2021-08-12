@@ -24,11 +24,12 @@ Route::get('/dashboard', function () {
 
 
 
-Route::get('/wishlist', [WishlistController::class, 'index']);
-Route::get('edit/{id}', [WishlistController::class, 'edit']);
-Route::post('update/{id}', [WishlistController::class, 'update']);
-Route::get('/wishlist-table/{flag}', [WishlistController::class, 'show']);
-Route::post('/insert', [WishlistController::class, 'store']);
-Route::delete('delete/{id}', [WishlistController::class, 'destroy']);
+Route::resource('wishlist', WishlistController::class);
+
+// Route::get('edit/{id}', [WishlistController::class, 'edit']);
+// Route::post('update/{id}', [WishlistController::class, 'update']);
+// Route::get('/wishlist-table/{flag}', [WishlistController::class, 'show']);
+// Route::post('/insert', [WishlistController::class, 'store']);
+// Route::delete('delete/{id}', [WishlistController::class, 'destroy']);
 require __DIR__ . '/auth.php';
 // Route::resource('/wishlist','WishlistController');

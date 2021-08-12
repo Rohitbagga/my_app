@@ -34,7 +34,7 @@
         <h1>Wishlist</h1>
         <div class="row">
             <div class="col-6 createwishlist">
-                <a href="{{ url('/wishlist') }}" class="btn btn-primary">Create Wishlist</a>
+                <a href="{{route('wishlist.create')}}" class="btn btn-primary">Create Wishlist</a>
             </div>
         </div>
         <table id="example" class="table table-striped table-bordered createwishlist" style="width:100%">
@@ -49,7 +49,9 @@
                 @foreach ($list as $row)
                     <tr>
                         <td>{{ $row->wishlist_name }}</td>
-                        <td><a href="{{ url('edit/' . $row['id']) }}" class="btn btn-primary">Edit</a> <a
+
+
+                        <td><a href="{{ route('wishlist.edit',$row['id'])}} " class="btn btn-primary">Edit</a> <a
                                 onclick="deletewishlist({{ $row['id'] }});" class="btn btn-danger ">Delete</td>
 
                     </tr>
@@ -115,15 +117,18 @@
                 if (willDelete) {
                     var token = $("meta[name='csrf-token']").attr("content");
                     $.ajax({
-
-                        url: "http://127.0.0.1:8000/delete/" + id,
+                       
+                        url: "{{route('wishlist.destroy',$row['id'])}}",
                         type: 'Delete',
                         data: {
                             "id": id,
                             "_token": token,
                         },
+                        headers: {
+                   'X-CSRF-Token': '{{ csrf_token() }}',
+                         },
                         success: function() {
-                            window.location = "http://127.0.0.1:8000/wishlist-table/list-deleted";
+                            window.location = "{{route('wishlist.index','list-deleted')}}";
                         }
                     });
                 }
