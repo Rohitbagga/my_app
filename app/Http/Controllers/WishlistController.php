@@ -14,14 +14,12 @@ class WishlistController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::check()) {
-            $userId = Auth::id();
-            $wishlist = User::find(1)->wishlist;
-            return view('wishlist-table')->with('list', $wishlist);} else {
-            return redirect('/login');
-        }
+         
+        $wishlist = $request->user()->wishlist;
+
+        return view('wishlist-table')->with('list', $wishlist);
     }
 
     /**
@@ -31,11 +29,8 @@ class WishlistController extends Controller
      */
     public function create()
     {
-        if (Auth::check()) {
 
-            return view('user-wishlist');} else {
-            return redirect('/login');
-        }
+        return view('user-wishlist');
     }
 
     /**
@@ -47,49 +42,34 @@ class WishlistController extends Controller
     public function store(Request $request)
     {
 
-        if (Auth::check()) {
+         $data= $request->validate([
+            'wishlist' => 'required',
+        ]);
+       
+        // $userId = Auth::id();
+        // $list = new Wishlist;
+        // $list->wishlist_name = $request->input('wishlist');
+        // $list->user_id = $userId;
+        // $list->save();
+          $data=Wishlist::create(array('wishlist_name' => $data['wishlist'],'user_id'=>Auth::id()));
+        
+        return redirect()->route('wishlists.index','list-inserted');
 
-            $this->validate($request, [
-                'wishlist' => 'required',
-            ]);
-            $userId = Auth::id();
-            $list = new Wishlist;
-            $list->wishlist_name = $request->input('wishlist');
-            $list->user_id = $userId;
-            $list->save();
-
-            return redirect()->route('wishlist.index');
-        } else {
-            return redirect('/login');
-        }
     }
+
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Wishlist $wishlist)
     {
+         
+        // $data = Wishlist::find($id);
+        return view('edit-wishlist', ['data' => $wishlist]);
 
-        if (Auth::check()) {
-
-            $data = Wishlist::find($id);
-            return view('edit-wishlist', ['data' => $data]);
-        } else {
-            return redirect('/login');
-        }
     }
 
     /**
@@ -99,20 +79,21 @@ class WishlistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Wishlist $wishlist)
     {
-        $this->validate($request, [
+
+    
+        $data = $request->validate([
             'wishlist' => 'required',
         ]);
-        if (Auth::check()) {
+       
+        // $data = Wishlist::find($id);
+        Wishlist::where('id',$wishlist['id'])->update(['wishlist_name' => $request->input('wishlist')]);
+        // $wishlist->wishlist_name = $request->wishlist;
+        
+        // $wishlist->save();
+        return redirect()->route('wishlists.index','list-updated');
 
-            $data = Wishlist::find($id);
-            $data->wishlist_name = $request->wishlist;
-            $data->save();
-            return redirect('/wishlist-table/list-updated');
-        } else {
-            return redirect('/login');
-        }
     }
 
     /**
@@ -121,15 +102,11 @@ class WishlistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Wishlist $wishlist)
     {
-        if (Auth::check()) {
-            $data = Wishlist::find($id);
+        // $data = Wishlist::find($id);
 
-            $data->delete();
-        } else {
-            return redirect('/login');
-        }
-        // return redirect('/wishlist-table/list-deleted');
+        $wishlist->delete();
+
     }
 }

@@ -22,7 +22,7 @@
         <div class="card">
             <div class="card-body">
                 <h1>Create New Wishlist</h1>
-                <form action="{{route('wishlist.store')}}" method="post" action="/action_page.php">
+                <form action="{{ route('wishlists.store') }}" method="post" action="/action_page.php">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="exampleInputEmail1">Create Wishlist</label>

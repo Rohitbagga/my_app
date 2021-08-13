@@ -34,7 +34,7 @@
         <h1>Wishlist</h1>
         <div class="row">
             <div class="col-6 createwishlist">
-                <a href="{{route('wishlist.create')}}" class="btn btn-primary">Create Wishlist</a>
+                <a href="{{ route('wishlists.create') }}" class="btn btn-primary">Create Wishlist</a>
             </div>
         </div>
         <table id="example" class="table table-striped table-bordered createwishlist" style="width:100%">
@@ -51,7 +51,7 @@
                         <td>{{ $row->wishlist_name }}</td>
 
 
-                        <td><a href="{{ route('wishlist.edit',$row['id'])}} " class="btn btn-primary">Edit</a> <a
+                        <td><a href="{{ route('wishlists.edit', $row['id']) }} " class="btn btn-primary">Edit</a> <a
                                 onclick="deletewishlist({{ $row['id'] }});" class="btn btn-danger ">Delete</td>
 
                     </tr>
@@ -76,27 +76,13 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
-<!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#example').DataTable();
     });
-    var url = window.location.href
-    var checkinsert = url.includes('success');
-    var checkdelete = url.includes('list-deleted');
-    var checkupdate = url.includes('list-updated');
-
-    if (checkinsert == true) {
-        toastr.success("Your Wishlist Inserted Successfully");
-    } else if (checkdelete == true) {
-        toastr.success("Your Wishlist Deleted Successfully");
-    } else if (checkupdate == true) {
-        toastr.success("Your Wishlist updated Successfully");
-    }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+
 <script type="text/javascript">
     function deletewishlist(id) {
 
@@ -117,22 +103,39 @@
                 if (willDelete) {
                     var token = $("meta[name='csrf-token']").attr("content");
                     $.ajax({
-                       
-                        url: "{{route('wishlist.destroy',$row['id'])}}",
+
+                        url: "{{ route('wishlists.destroy', $row['id']) }}",
                         type: 'Delete',
                         data: {
                             "id": id,
                             "_token": token,
                         },
                         headers: {
-                   'X-CSRF-Token': '{{ csrf_token() }}',
-                         },
+                            'X-CSRF-Token': '{{ csrf_token() }}',
+                        },
                         success: function() {
-                            window.location = "{{route('wishlist.index','list-deleted')}}";
+                            window.location = "{{ route('wishlists.index', 'list-deleted') }}";
                         }
                     });
                 }
             });
 
     }
+</script>
+{{-- this is for showing toast on success --}}
+<script>
+    $(document).ready(function() {
+        var url = window.location.href;
+        var checkinsert = url.includes('list-inserted');
+        var checkdelete = url.includes('list-deleted');
+        var checkupdate = url.includes('list-updated');
+
+        if (checkinsert == true) {
+            toastr.success("Your Wishlist Inserted Successfully");
+        } else if (checkdelete == true) {
+            toastr.success("Your Wishlist Deleted Successfully");
+        } else if (checkupdate == true) {
+            toastr.success("Your Wishlist updated Successfully");
+        }
+    });
 </script>

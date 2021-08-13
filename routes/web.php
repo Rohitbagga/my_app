@@ -22,9 +22,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('wishlists', WishlistController::class)->middleware(['auth'])->except(['show']);    
+});
 
 
-Route::resource('wishlist', WishlistController::class);
 
 // Route::get('edit/{id}', [WishlistController::class, 'edit']);
 // Route::post('update/{id}', [WishlistController::class, 'update']);
