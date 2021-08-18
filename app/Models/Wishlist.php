@@ -4,14 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wishlist extends Model
 {
-  protected $fillable = ['user_id','wishlist_name'];
+    protected $fillable = ['user_id', 'wishlist_name','image'];
     use HasFactory;
-  public function wishlistdata(){
-   
-     return $this->hasMany();
-  }
-    
+    use SoftDeletes;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getImageUrlAttribute($value)
+    {        
+        return 'storage/app/public/'.$this->image;
+        
+    }
+
+    public function getImagePathAttribute()
+    {
+        return asset('storage/'.$this->image);
+    }
 }

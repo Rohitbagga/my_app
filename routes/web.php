@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WishlistController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,8 +23,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('wishlists', WishlistController::class)->middleware(['auth'])->except(['show']);    
+Route::middleware('auth')->group(function () {
+    Route::delete('force-delete/{id}', [WishlistController::class, 'forceDelete'])->name('wishlists.force_delete');
+    Route::get('restore/{id}', [WishlistController::class, 'restore'])->name('wishlists.restore'); 
+    Route::resource('wishlists', WishlistController::class);
 });
 
 

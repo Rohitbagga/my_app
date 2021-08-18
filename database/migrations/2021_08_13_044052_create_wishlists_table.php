@@ -14,17 +14,18 @@ class CreateWishlistsTable extends Migration
     public function up()
     {
         Schema::create('wishlists', function (Blueprint $table) {
+            
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->biginteger('user_id')->unsigned();
             $table->string('wishlist_name');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
             // $table->created_at();
             // $table->updated_at();
 
             $table->timestamps();
         });
     }
- 
+
     /**
      * Reverse the migrations.
      *

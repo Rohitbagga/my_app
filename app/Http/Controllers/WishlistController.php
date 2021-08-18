@@ -9,104 +9,97 @@ use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function __construct()
+    {
+        $this->middleware(['owner'], ['only' => [
+            'edit', 'update', 'delete',
+        ]]);
+    }
     public function index(Request $request)
     {
-         
-        $wishlist = $request->user()->wishlist;
+        $wishlists = auth()->user()->wishlists()->withTrashed()->get();
 
-        return view('wishlist-table')->with('list', $wishlist);
+        return view('wishlists.index', compact('wishlists'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-
-        return view('user-wishlist');
+        return view('wishlists.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-
-         $data= $request->validate([
-            'wishlist' => 'required',
+        $data = $request->validate([
+            'wishlist_name' => 'required',
+            'image_upload' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
         ]);
-       
-        // $userId = Auth::id();
-        // $list = new Wishlist;
-        // $list->wishlist_name = $request->input('wishlist');
-        // $list->user_id = $userId;
-        // $list->save();
-          $data=Wishlist::create(array('wishlist_name' => $data['wishlist'],'user_id'=>Auth::id()));
-        
-        return redirect()->route('wishlists.index','list-inserted');
+
+        if ($image = $this->MoveUploadFile($data)) {
+            auth()->user()->wishlists()->create(array('wishlist_name' => $data['wishlist_name'], 'image' => $image));
+
+            return redirect()->route('wishlists.index')->with(['success' => 'List inserted successfully']);
+        } else {
+            //
+        }
 
     }
 
-    /**
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    private function MoveUploadFile($data)
+    {
+
+        $imageName = null;
+
+        try {
+            $imageName = time() . '.' . $data['image_upload']->extension();
+
+            $data['image_upload']->storeAs('public', $imageName);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+        }
+
+        return $imageName;
+    }
+
     public function edit(Wishlist $wishlist)
     {
-         
-        // $data = Wishlist::find($id);
-        return view('edit-wishlist', ['data' => $wishlist]);
-
+        return view('wishlists.edit', compact('wishlist'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request,Wishlist $wishlist)
+    public function update(Request $request, Wishlist $wishlist)
     {
-
-    
         $data = $request->validate([
-            'wishlist' => 'required',
+            'wishlist_name' => 'required',
         ]);
-       
-        // $data = Wishlist::find($id);
-        Wishlist::where('id',$wishlist['id'])->update(['wishlist_name' => $request->input('wishlist')]);
-        // $wishlist->wishlist_name = $request->wishlist;
-        
-        // $wishlist->save();
-        return redirect()->route('wishlists.index','list-updated');
 
+        $wishlist->update($data);
+
+        return redirect()->route('wishlists.index')->with('success','List Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Wishlist $wishlist)
     {
-        // $data = Wishlist::find($id);
-
         $wishlist->delete();
 
+        return [
+            'status' => 'success',
+            'message' => 'Wishlist deleted successfully',
+        ];
+    }
+    public function forceDelete($id)
+    {
+        Wishlist::withTrashed()->findOrFail($id)->forceDelete();
+
+        return [
+            'status' => 'success',
+            'message' => 'Wishlist deleted successfully',
+        ];
+    }
+
+    public function restore($id)
+    {
+        Wishlist::withTrashed()->findOrFail($id)->restore();
+
+        return back();
     }
 }
