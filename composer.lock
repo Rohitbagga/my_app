@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8077c65d948158e9df262d1211f76acc",
+    "content-hash": "198412ac367c02a171d3465f6bb3aa48",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6093,6 +6093,68 @@
                 "source": "https://github.com/mockery/mockery/tree/1.4.3"
             },
             "time": "2021-02-24T09:51:49+00:00"
+        },
+        {
+            "name": "mralston/bootstrap-breeze",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mralston/bootstrap-breeze.git",
+                "reference": "65ba8a901ec8aee10b430ab71a46939b6eedd037"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mralston/bootstrap-breeze/zipball/65ba8a901ec8aee10b430ab71a46939b6eedd037",
+                "reference": "65ba8a901ec8aee10b430ab71a46939b6eedd037",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "^8.42",
+                "illuminate/support": "^8.42",
+                "illuminate/validation": "^8.42",
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Breeze\\BootstrapBreezeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Breeze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Matt Ralston",
+                    "email": "matt@mralston.co.uk"
+                }
+            ],
+            "description": "Minimal Laravel authentication scaffolding with Vue, Inertia & Bootstrap. This package is based on laravel/breeze by Taylor Otwell.",
+            "keywords": [
+                "auth",
+                "bootstrap",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/mralston/bootstrap-breeze/issues",
+                "source": "https://github.com/mralston/bootstrap-breeze"
+            },
+            "time": "2021-07-03T21:42:50+00:00"
         },
         {
             "name": "myclabs/deep-copy",

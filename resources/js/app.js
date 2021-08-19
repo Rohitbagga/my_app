@@ -1,3 +1,6 @@
+require('./bootstrap');
+
+require('alpinejs');
 import 'bootstrap';
 import $ from 'jquery';
 window.$ = window.jQuery = $;
@@ -31,7 +34,7 @@ $(document).on('click', '.button', function (e) {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 //   },
                 success: function() {
-                    location.reload();
+                    // location.reload();
                 }, error: function (error) {
                     alert('something is wrong');
                 }
@@ -62,7 +65,7 @@ $(document).on('click', '.forcedelete', function (e) {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 //   },
                 success: function() {
-                    location.reload();
+                    // location.reload();
                 },error: function (error) {
                     alert('something is wrong');
                 }
@@ -72,6 +75,5 @@ $(document).on('click', '.forcedelete', function (e) {
 });
 
 $(document).ready(function() {
-    $('#example').DataTable();
+    $('#dataTable').DataTable();
 } );
-

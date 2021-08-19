@@ -16,6 +16,7 @@ class WishlistController extends Controller
             'edit', 'update', 'delete',
         ]]);
     }
+
     public function index(Request $request)
     {
         $wishlists = auth()->user()->wishlists()->withTrashed()->get();
@@ -33,19 +34,20 @@ class WishlistController extends Controller
         $data = $request->validate([
             'wishlist_name' => 'required',
             'image_upload' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+           
         ]);
 
-        if ($image = $this->MoveUploadFile($data)) {
+        if ($image = $this->moveUploadFile($data)) {
             auth()->user()->wishlists()->create(array('wishlist_name' => $data['wishlist_name'], 'image' => $image));
 
-            return redirect()->route('wishlists.index')->with(['success' => 'List inserted successfully']);
+            return redirect()->route('wishlists.index')->with(['status' => 'success','message' =>'List Inserted Successfully']);
         } else {
-            //
+            \Log::error($e->getMessage());
         }
 
     }
 
-    private function MoveUploadFile($data)
+    private function moveUploadFile($data)
     {
 
         $imageName = null;
@@ -74,7 +76,7 @@ class WishlistController extends Controller
 
         $wishlist->update($data);
 
-        return redirect()->route('wishlists.index')->with('success','List Updated Successfully');
+        return redirect()->route('wishlists.index')->with(['status' => 'success','message' =>'List Updated Successfully']);
     }
 
     public function destroy(Wishlist $wishlist)

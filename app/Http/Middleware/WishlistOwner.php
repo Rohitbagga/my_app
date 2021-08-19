@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Wishlist;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,15 +17,16 @@ class WishlistOwner
      */
     public function handle($request, Closure $next)
     {
+        $wishlist = $request->route('wishlist');
 
-        $id = $request->route('wishlist'); // For example, the current URL is: /posts/1/edit
-
-        $wishlist = Wishlist::find($id); // Fetch the post
-
-        if ($wishlist[0]->user_id == auth()->user()->id) {
-            return $next($request); // They're the owner, lets continue...
+        if ($wishlist->user_id !== auth()->id()) {
+            return redirect()->route('wishlists.index')->with([
+                'status' => 'fail',
+                'message' => 'You are not authenticated to edit',
+            ]);
         }
 
-        return redirect()->to('wishlists'); // Nope! Get outta' here.
+        return $next($request);
+
     }
 }

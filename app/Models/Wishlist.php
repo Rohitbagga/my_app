@@ -19,12 +19,12 @@ class Wishlist extends Model
 
     public function getImageUrlAttribute($value)
     {        
-        return 'storage/app/public/'.$this->image;
+        return asset("storage/{$this->image}");
         
     }
 
     public function getImagePathAttribute()
     {
-        return asset('storage/'.$this->image);
+        return Storage_Path('storage/'.$this->image);
     }
 }
